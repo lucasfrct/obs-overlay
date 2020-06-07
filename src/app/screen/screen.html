@@ -1,0 +1,173 @@
+<style>
+
+.screen-controls {
+    display: grid;
+    grid-template-columns: 2fr 0.4fr 0.4fr;
+    grid-template-rows: 34px;
+    padding: 2px 8px;
+}
+
+.screen-controls > * {
+    line-height: 26px;
+    font-size: 12px;
+    padding: 0 8px;
+    text-align: right;
+}
+
+.screen-controls > *:last-child {
+    text-align: left;
+}
+
+.screen,
+.screen .show {
+    border: none;
+    outline: 0;
+    left: 0;
+    top: 0;
+    overflow: hidden;
+    margin: 0;
+    position: relative;
+}
+
+.screen {
+    width: calc(100vw - 3px);
+    height: calc((100vw - 3px) / 1.777777);
+    box-sizing: border-box;
+    border: solid 0.1px rgba(0,0,0,0.8);
+    margin: 0px auto;
+    color: #FFF;
+    text-shadow: 0px 0px 1.5em rgba(0,0,0,0.3);
+    -webkit-text-stroke: 1px rgba(0,0,0,0.15);
+}
+
+.screen * {
+    box-sizing: border-box;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    color: inherit;
+    text-shadow: inherit;
+}
+
+.screen .show {
+    width: 100%;
+    height: 100%;
+    will-change: transform, transition;
+    visibility: hidden;
+}
+
+.screen .show.visible {
+    visibility: visible;
+}
+
+.screen .show > * {
+    position: absolute;
+    width: auto;
+    word-wrap: break-word;
+    top: 0%;
+    left: 0%;
+    line-height: calc(100% * 0.73);
+    z-index: 1;
+    cursor: pointer;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    outline: solid 1px transparent;
+    border: solid 1px transparent;
+}
+
+.screen .show img {
+    max-width: 100%;
+    object-fit: cover;
+    width: 50%;
+    z-index: 1;
+    display: block;
+}
+
+.screen .show span {
+    font-size: calc(((100vw * 0.766) / 100) * 7); /* (0.766) - max 100% */
+    text-align: left;
+}
+
+.screen .show .focused {
+    outline-color: #F00;
+}
+
+.screen.preview {
+    min-width: 284px;
+    min-height: calc(284px / 1.777777);
+    color: #FFF;
+    background-color: rgba(76,76,76,0.2);
+}
+
+.screen.preview .show {
+    width: calc(100% - 16px);
+    height: calc(100% - 16px);
+    margin: 8px;
+    background-color: rgba(76,76,76,0.4);
+}
+
+.screen.preview .show.visible {
+    outline: solid 1px rgba(255,255,255,0.8);
+}
+
+.screen.preview .show > * {
+    cursor: pointer;
+    border: solid 0.1px transparent;
+    min-width: 20px;
+    min-height: 5px;
+    box-sizing: border-box;
+} 
+
+.screen.preview .show span {
+    font-size: calc(100vw * 0.753); /* (0.753) - max 100% */
+}
+</style>
+
+<section class="no-select screen-controls">
+    
+ 
+    <div class="input-spinner color-secondary">
+        <span ng-click="dimension('-')" >-</span>
+        <input type="text" ng-model="control.element.size">
+        <span ng-click="dimension('+')">+</span>
+    </div>
+
+    <span>Color:</span>
+    
+    <div> <picker></picker> </div>
+</section>
+
+
+<section class="screen {{ (control.preview) ? 'preview' : ''}}">
+        
+    <div class="show animation {{ (lower.active) ? 'visible' :'' }}">
+
+        <img 
+            class="{{ (image.focused) ? 'focused': '' }}"
+            style="top:{{image.y}}%; left:{{image.x}}%; width:{{image.size}}%"
+            ng-repeat="image in lower.elements | filter: { type: 'image'}"
+            ng-click="focused(image)"
+            ng-dblclick="changeLayer(image)" 
+            src="/source?path={{image.src}}"
+            update="update"
+            draggable="image"
+        />
+
+        <span
+            class="{{ (text.focused) ? 'focused': '' }}"
+            style="top:{{text.y}}%; left:{{text.x}}%; font-size: calc(((100vw * 0.766) / 100) * {{text.size}}); color: {{text.color}}"
+            ng-repeat="text in lower.elements | filter: { type: 'text'}"
+            ng-click="focused(text)"
+            ng-dblclick="changeLayer(text)" 
+            update="update"
+            draggable="text"
+        >{{text.src}}</span>
+
+    </div>
+
+</section>

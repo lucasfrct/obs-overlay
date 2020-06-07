@@ -1,0 +1,8 @@
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Roboto-Regular'), url('./Roboto-Regular.ttf');
+}

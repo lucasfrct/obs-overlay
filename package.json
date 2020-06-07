@@ -1,0 +1,35 @@
+{
+  "name": "obs-overlay",
+  "version": "1.0.0",
+  "description": "Lower Third for OBS",
+  "main": "app.js",
+  "dependencies": {
+    "clear": "^0.1.0",
+    "cors": "^2.8.5",
+    "dialog": "^0.3.1",
+    "electromon": "^1.0.10",
+    "electron-debug": "^3.1.0",
+    "electron-is-dev": "^1.2.0",
+    "electron-titlebar-windows": "^3.0.0",
+    "express": "^4.17.1",
+    "fs": "0.0.1-security",
+    "image-thumbnail": "^1.0.8",
+    "path": "^0.12.7",
+    "process": "^0.11.10",
+    "remote": "^0.2.6"
+  },
+  "devDependencies": {
+    "electron": "^9.0.0"
+  },
+  "scripts": {
+    "start": "electromon .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "OBS",
+    "Lower",
+    "Third"
+  ],
+  "author": "Lucas Costa",
+  "license": "ISC"
+}

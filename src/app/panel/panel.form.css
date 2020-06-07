@@ -1,0 +1,95 @@
+body .panel-form {
+    padding: 16px;
+    clear: both;
+}
+
+body .panel-form > *:first-child {
+    font-weight: bold;
+    text-align: center;
+    font-size: 1.2em;
+    text-align: center;
+    display: block;
+    padding: 4px 0;
+}
+
+body .panel-form > * {
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    margin: auto;
+    padding: 0;
+    background-color: transparent;
+}
+
+body .panel-form form {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+body .panel-form form > .panel-form-field {
+    padding: 0;
+    border-color: transparent;
+    width: calc(100% - 2px);
+} 
+
+body .panel-form form > .panel-form-field > * {
+    margin: 0;
+    width: calc(100% -2px);
+}
+
+body .panel-form .panel-form-text i {
+    width: 20px;
+    height: 20px;
+    float: right;
+    right: 0;
+    bottom: 0;
+    margin: -21px 5px 0 0;
+}
+
+body .panel-form .panel-form-icon {
+    position: relative;
+    display: block;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: calc(100% - 8px) auto;
+    background-color: rgba(255,255,255,0.7);
+    box-sizing: border-box;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+body .panel-form .panel-form-icon:hover {
+    filter: brightness(1.4);
+}
+
+body .panel-form .panel-icon-close {
+    background-image: url(../../assets/images/trash.png);
+} 
+
+body .panel-form .panel-form-image {
+    height: 32px;
+    width: auto !important;
+    display: inline-block;
+    vertical-align: top;
+    margin: 6px 2px;
+}
+
+body .panel-form .panel-form-thumbnail {
+    height: 32px;
+    width: auto;
+}
+
+body .panel-form .panel-form-image .panel-icon-close {
+    height: 32px;
+    width: 100%;
+    background-color: transparent;
+    margin: -36px 0 0 0;
+    background-size: auto 16px;
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+}
+
+body .panel-form .panel-form-image .panel-icon-close:hover {
+    background-color: rgba(255,255,255,0.9);
+    opacity: 1;
+}
