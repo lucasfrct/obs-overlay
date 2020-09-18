@@ -1,15 +1,19 @@
 
 /*
  * Author: Lucas Costa
- * Date: May of 2020
+ * Date: September 2020
  */
+
+ const config = {
+    root: "/../../",
+ }
+
 const exec = require('child_process').exec;
 const express = require('express')
 const cors = require('cors')
-const path = require('path')
+const Path = require('path')
 const fs = require('fs')
 const imageThumbnail = require('image-thumbnail')
-
 
 const ex = express()
 
@@ -18,25 +22,25 @@ const Directory = {
 }
 
 ex.use(cors())
-ex.use(express.static(__dirname + '/'))
-ex.use(express.static('C:/'))
-ex.use(express.static('D:/'))
+ex.use(express.static(Path.join(__dirname+config.root)))
+ex.use(express.static(Path.join('C:/')))
+ex.use(express.static(Path.join('D:/')))
 
 ex.get('/', (req, res)=> {
-    res.sendFile(path.join(__dirname+'/index.html'));
+    res.sendFile(Path.join(__dirname+config.root+"index.html"))
 })
 
 ex.get('/panel', (req, res)=> {
-    res.sendFile(path.join(__dirname+'/panel.html'));
+    res.sendFile(Path.join(__dirname+config.root+'panel.html'));
 })
 
 ex.get('/display', (req, res)=> {
-    res.sendFile(path.join(__dirname+'/display.html'));
+    res.sendFile(Path.join(__dirname+'/../../display.html'));
 })
 
 ex.get('/source', (req, res)=> {
 
-    fs.readFile(req.query.path, (err, data)=> {
+    fs.readFile(Path.join(req.query.path), (err, data)=> {
         res.writeHead(200, {'Content-Type': 'image'})
         res.end(data);
     });
@@ -46,9 +50,9 @@ ex.get('/source', (req, res)=> {
 ex.get('/thumbnail', async(req, res)=> {
 
     if(req.query.path.length > 5) {
-        var thumbnail = await imageThumbnail(req.query.path);
+        var thumbnail = await imageThumbnail(Path.join(req.query.path))
         res.writeHead(200, {'Content-Type': 'image'})
-        res.end(thumbnail);
+        res.end(thumbnail)
     } else {
         res.json({ path: "no found" })
     }
@@ -73,6 +77,8 @@ ex.listen("1010", ()=> { })
 
 function GetImages(path, callback) {
     
+    var extensions = [".jpg", ".jpeg", ".png", ".bmp", ".gif", ".webp", ".sgv"]
+
     Directory.List(path, (directories)=> {  
         
         var dir = directories.filter((directory)=> {
@@ -111,26 +117,19 @@ async function DirectoryList(path, callback) {
     const dir = await fs.promises.opendir(path);
 
     for await (const dirent of dir) {
+        
+        console.log("DIR", dirent)
 
-        var type = (isDirectory(path+dirent.name)) ? "directory" : "file"
+        var type = (dirent.isDirectory()) ? "directory" : "file"
         var letter = dirent.name.substring(0,1)
         
         if (!(letter == "$" || letter == ".") ) {
-            directories.push({ name: String(path+dirent.name), type: type });
+            directories.push({ name: String(Path.join(path+dirent.name)), type: type });
         }
 
     }
 
     callback(directories)
-}
-
-function isDirectory(path) {
-    try {
-        var stat = fs.statSync(path); 
-        return stat.isDirectory();
-    } catch (e) {
-        return false;
-    }
 }
 
 function DriveList(callback) {
@@ -139,12 +138,17 @@ function DriveList(callback) {
 
     exec('wmic logicaldisk get name', (error, stdout, stderr) => {
 
-        list = stdout.replace(/Name/g, "").replace(/\r/g, "").replace(/\n/g, "").replace(/ /g, "").trim()
+        list = stdout
+            .replace(/Name/g, "")
+            .replace(/\r/g, "")
+            .replace(/\n/g, "")
+            .replace(/ /g, "")
+            .trim()
         list = list.split(":")
         
         list.forEach((drive)=> {
             if(drive.length > 0) {
-                drives.push({ name: String(drive.trim()+":"), type: "directory"})
+                drives.push({ name: String(Path.join(drive.trim()+":")), type: "directory"})
             }
         })
 

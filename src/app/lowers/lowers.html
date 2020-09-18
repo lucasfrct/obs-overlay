@@ -1,0 +1,129 @@
+<style>
+.lowers {
+    border: solid 1px rgba(0,0,0,1);
+    padding: 4px;
+    display: block;
+    clear: both;
+    max-height: 240px;
+    width: 100%;
+    overflow: hidden;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, calc(50% - 8px));
+    grid-template-rows: repeat(auto-fill, 56px);
+    grid-gap: 8px;
+    text-align: center;
+}
+
+.lowers .lower {
+    cursor: pointer;
+    padding: 8px 12px;
+    min-width: 135px;
+    font-weight: 500;
+    height: 56px;
+    border-radius: 2px;
+    box-sizing: border-box;
+    outline: solid 1px rgba(255,255,255, 0.3);
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    text-align: left;
+}
+
+
+.lowers .lower:last-child {
+    margin-bottom: 16px;
+}
+
+.lowers .lower:hover {
+    filter: brightness(1.3);
+    outline: solid 1px rgba(255,255,255, 0.6);
+}
+
+.lowers .lower > * {
+    display: block;
+    position: relative;
+    width: 100%;
+    padding: 0;
+    background-color: transparent;
+    word-wrap: break-word;
+}
+
+.lowers .lower > *:first-child {
+    font-weight: bold;
+    font-size: 0.8em;
+}
+
+.lowers .lower > *:last-child {
+    font-size: 0.6em;
+    margin-top: 4px;
+}
+
+.lowers .lower.lower-add {
+    opacity: 0.6;
+    margin-bottom: 16px;
+}
+
+.lowers .lower.lower-add:hover {
+    opacity: 0.9;
+}
+
+.lowers .lower.lower-add > * {
+    line-height: 24px;
+    text-align: center;
+    font-size: 1.6em;
+}
+
+.lower-delete {
+    float: right;
+}
+
+</style>
+
+<section class="lowers" ng-cloak>
+
+    <div 
+        class="no-select lower {{ (lo.active) ? 'active-btn' : '' }}" 
+        ng-repeat="lo in collection.lowers" 
+        ng-click="select(lo)"
+        ng-dblclick="edit(lo)"
+    >
+        <span>{{ lo.title | limitTo: 15 }}</span>
+    </div>
+
+    <div class="no-select lower lower-add" ng-click="new()">
+        <span>+</span>
+    </div>
+
+</section>
+
+<section class="modal {{ (collection.control.open) ? 'active' :'' }}" >
+    <div class="modal-content color-secondary panel-form">
+        <h4>Add Lower Third</h4>
+        <form autocomplete="off">
+            <input class="form-title" name="title" placeholder="Title" ng-model="lower.title" >
+
+            <div class="panel-form-field panel-form-image" ng-repeat="el in lower.elements | filter: { type: 'image'}">
+                <img class="panel-form-thumbnail" ng-src="/thumbnail?path={{el.src}}" />
+                <i class="panel-form-icon panel-icon-close" ng-click="removeElement(lower, el)"></i>
+            </div>
+
+            <div class="panel-form-field panel-form-text" ng-repeat="elem in lower.elements | filter: { type: 'text'}">
+                <textarea name="text" placeholder="Write your text here" rows="2" ng-model="elem.src"></textarea>
+                <i class="panel-icon-close panel-form-icon" ng-click="removeElement(lower, elem)"></i>
+            </div>
+
+            <div class="panel-form-field panel-form-btns" ng-show="lower.title">
+                <button class="btn info" ng-click="addText(lower)">Add Text</button>
+                <button class="btn info" ng-click="addImage(lower)">Add Image</button>
+            </div>
+            
+            <button class="btn success" ng-click="save(lower)">&nbsp &nbsp &nbsp Save &nbsp &nbsp &nbsp</button>
+            <button class="btn warning" ng-click="cancel(lower)">Cancel</button>
+            <button class="btn danger lower-delete" ng-click="delete(lower)">Delete</button>
+        </form>
+    </div>
+</section>

@@ -1,102 +1,65 @@
-<header class="panel-header color-header" ng-cloak>
-            
-    <em>Fade</em>
-    
-    <em>Effect</em>
+<link rel="stylesheet" href="assets/css/input-spinner.css">
+<link rel="stylesheet" href="assets/css/animation.css">
 
-    <em> 
-        <button ng-show="control.storage" class="btn-reset" ng-click="reset()">R</button>
-        Go Live
-    </em>
+<link rel="stylesheet" href="assets/css/modal.css">
 
-    <div class="input-spinner color-secondary">
-        <span ng-click="fade('-')" >-</span>
-        <input type="text" ng-model="control.effect.on">
-        <span ng-click="fade('+')">+</span>
-    </div>
-    
-    <div class="input-spinner color-secondary">
-        <span ng-click="effectsCtrl('-')">-</span>
-        <input type="text" ng-model="control.effect.type" readonly>
-        <span ng-click="effectsCtrl('+')">+</span>
-    </div>
+<link rel="stylesheet" href="app/panel/panel.css">
+<link rel="stylesheet" href="app/panel/panel.controls.css">
+<link rel="stylesheet" href="app/panel/panel.form.css">
 
-    <button 
-        class="go-live danger {{ (control.go) ? 'active-btn': '' }}"
-        ng-click="toggleGo()"
-    >GO</button>
+<div class="panel-container">
+    <header class="panel-header color-header no-select" ng-cloak>
 
-</header>
+        <em>Collection</em>
 
-<main class="panel-main" ng-cloak>
+        <em>Speed</em>
+        
+        <em>Effect</em>
 
-   <screen></screen>
+        <em> 
+            Go Live
+            <button class="btn-reset" ng-click="reset()">R</button>
+        </em>
 
-    <section class="panel-lowers">
-
-        <div 
-            class="no-select lower {{ (lo.active) ? 'active-btn' : '' }}" 
-            ng-repeat="lo in lowers" 
-            ng-click="select(lo)"
-            ng-dblclick="edit(lo)"
-        >
-            <span>{{ lo.title | limitTo: 15 }}</span>
-            <span>{{ lo.text.src | limitTo: 20 }}</span>
+        <div class="panel-collection color-secondary">
+            <select 
+                ng-options="coll as coll.title for coll in collections track by coll.title" 
+                ng-model="collection"
+                ng-change="update()"
+            >
+            </select>
         </div>
 
-        <div class="no-select lower lower-add" ng-click="add()">
-            <span>+</span>
+        <div class="input-spinner color-secondary">
+            <span ng-click="speed('-')" >-</span>
+            <input type="text" ng-model="collection.effect.speed">
+            <span ng-click="speed('+')">+</span>
+        </div>
+        
+        <div class="input-spinner color-secondary">
+            <span ng-click="effectType('-')">-</span>
+            <input type="text" ng-model="collection.effect.type" disabled>
+            <span ng-click="effectType('+')">+</span>
         </div>
 
-    </section>
+        <button 
+            class="go-live danger {{ (collection.control.onAir) ? 'active-btn': '' }}"
+            ng-click="toggleGo()"
+        >GO</button>
 
-    <section class="modal {{ (control.add) ? 'active' :'' }}" >
-        <div class="modal-content color-secondary panel-form">
-            <h4>Add Lower Third</h4>
-            <form autocomplete="off">
-                <input name="title" placeholder="Título" ng-model="lower.title" >
+    </header>
 
-                <div class="panel-form-field panel-form-image" ng-repeat="el in lower.elements | filter: { type: 'image'}">
-                    <img class="panel-form-thumbnail" ng-src="/thumbnail?path={{el.src}}" />
-                    <i class="panel-form-icon panel-icon-close" ng-click="removeElement(lower, el)"></i>
-                </div>
+    <main class="panel-main" ng-cloak>
 
-                <div class="panel-form-field panel-form-text" ng-repeat="elem in lower.elements | filter: { type: 'text'}">
-                    <textarea name="text" placeholder="Escreva seu texto aqui" rows="2" ng-model="elem.src"></textarea>
-                    <i class="panel-form-icon panel-icon-close" ng-click="removeElement(lower, elem)"></i>
-                </div>
+        <!--<screen></screen> -->
+        <lowers ng-init="update()"></lowers>
 
-                <div class="panel-form-field">
-                    <button class="btn info" ng-click="addText(lower)">Add Text</button>
-                    <button class="btn info" ng-click="addImage(lower)">Add Image</button>
-                </div>
-                
-                <button class="btn success" ng-click="save(lower)">Save</button>
-                <button class="btn danger" ng-click="cancel(lower)">Cancel</button>
-            </form>
-        </div>
-    </section>
+        <section class="modal {{ (control.window) ? 'active' :'' }}" >
+            <div class="modal-content color-secondary">
+                <window></window>
+            </div>
+        </section>
 
-<!-- 
-    <section class="modal {{ (control.edit) ? 'active' :'' }}" >
-        <div class="modal-content color-secondary panel-add">
-            <h4>Edit Lower Third:</h4>
-            <form autocomplete="off">
-                <input name="title" placeholder="Título" ng-model="control.select.title" >
-                <input name="image" placeholder="Caminho da imagem" ng-model="control.select.image.src">
-                <textarea name="text" placeholder="Texto" rows="4" ng-model="control.select.text.src"></textarea>
-                <button class="btn success" ng-click="storage(control.select)">Save</button>
-                <button class="btn warning" ng-click="remove(control.select)">Remove</button>
-                <button class="btn danger" ng-click="toggleEdit(control.select)">Cancel</button>
-            </form>
-        </div>
-    </section> 
--->
+    </main>
 
-    <section class="modal {{ (control.window) ? 'active' :'' }}" >
-        <div class="modal-content color-secondary">
-            <window></window>
-        </div>
-    </section>
-
-</main>
+</div>

@@ -5,6 +5,7 @@
     grid-template-columns: 2fr 0.4fr 0.4fr;
     grid-template-rows: 34px;
     padding: 2px 8px;
+    min-width: 300px;
 }
 
 .screen-controls > * {
@@ -27,14 +28,16 @@
     overflow: hidden;
     margin: 0;
     position: relative;
+    min-width: 300px;
 }
 
 .screen {
-    width: calc(100vw - 3px);
-    height: calc((100vw - 3px) / 1.777777);
+    width: calc(100vw - 15px); /* 3 or 15 | 15px 'and the sidebar strips */ 
+    height: calc((100vw - 15px) / 1.777777); /* aspectic ratio = 16:9 ex.: (1920 / 1,777777) = 108*/
+    background-color: rgba(255,255,255,0.08);
     box-sizing: border-box;
-    border: solid 0.1px rgba(0,0,0,0.8);
-    margin: 0px auto;
+    border: solid 0.1px rgba(255,255,255,0.2);
+    margin: 4px auto;
     color: #FFF;
     text-shadow: 0px 0px 1.5em rgba(0,0,0,0.3);
     -webkit-text-stroke: 1px rgba(0,0,0,0.15);
@@ -54,10 +57,12 @@
     height: 100%;
     will-change: transform, transition;
     visibility: hidden;
+    min-width: 300px;
 }
 
 .screen .show.visible {
     visibility: visible;
+    border: solid 0.1px rgba(255,255,255,0.6);
 }
 
 .screen .show > * {
@@ -69,7 +74,6 @@
     line-height: calc(100% * 0.73);
     z-index: 1;
     cursor: pointer;
-
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -162,7 +166,7 @@
             class="{{ (text.focused) ? 'focused': '' }}"
             style="top:{{text.y}}%; left:{{text.x}}%; font-size: calc(((100vw * 0.766) / 100) * {{text.size}}); color: {{text.color}}"
             ng-repeat="text in lower.elements | filter: { type: 'text'}"
-            ng-click="focused(text)"
+            ng-click="focusedIn(text)"
             ng-dblclick="changeLayer(text)" 
             update="update"
             draggable="text"

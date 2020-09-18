@@ -22,11 +22,11 @@
         
         function link($scope, element, attr) {
 
-            var orientation = { x: 0, y: 0}
+            var orientation = { x: 0, y: 0 }
 
             var start = { ...orientation }
 
-            var position = { limit: 3, ...orientation }
+            var position = { limit: 1, ...orientation }
             
             var container = { ...Parent(), borderInit: 0, borderEnd: 0, ...orientation }
             
@@ -94,7 +94,7 @@
                 var border = "solid 1px transparent"
                 if (state) { border = "solid 1px #F00" }
 
-                element.css({ border: border })
+                //element.css({ border: border })
             }
 
             function Parent() {

@@ -92,6 +92,7 @@ body .btn {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    margin-bottom: 2px;
 }
 
 body .btn:hover {
@@ -105,4 +106,18 @@ body .no-select {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: rgba(57, 57, 57, 1);
+    border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: rgba(76, 76, 76, 1); 
 }

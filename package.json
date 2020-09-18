@@ -2,7 +2,7 @@
   "name": "obs-overlay",
   "version": "1.0.0",
   "description": "Lower Third for OBS",
-  "main": "app.js",
+  "main": "src/app.js",
   "dependencies": {
     "clear": "^0.1.0",
     "cors": "^2.8.5",
@@ -19,11 +19,27 @@
     "remote": "^0.2.6"
   },
   "devDependencies": {
-    "electron": "^9.0.0"
+    "electron": "^9.0.0",
+    "electron-builder": "^22.8.0",
+    "electron-packager": "^15.1.0",
+    "electron-winstaller": "^4.0.1",
+    "electron-wix-msi": "^3.0.0"
   },
   "scripts": {
+    "first": "npm install && electron .",
     "start": "electromon .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "build": "electron-packager . obs-overlay --platform=win32 --arch=x64"
+  },
+  "build": {
+    "appId": "TesteWindows",
+    "win": {
+      "category": "teste.win.explorer",
+      "target": "NSIS",
+      "icon": "./src/assets/images/logomarca-overlay.ico"
+    }
   },
   "keywords": [
     "OBS",
@@ -31,5 +47,5 @@
     "Third"
   ],
   "author": "Lucas Costa",
-  "license": "ISC"
+  "license": "MIT"
 }

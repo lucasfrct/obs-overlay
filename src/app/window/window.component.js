@@ -14,6 +14,12 @@
 
     function WindowController($rootScope, $scope, $document, $Path) {
 
+        $rootScope.WINDOW = {
+            preview: false,
+            open: false,
+            path: "",
+        }
+
         $scope.control = {
             open: false,
             base: "/Images",
@@ -22,15 +28,18 @@
             paths: ""
         }   
 
-        $rootScope.$watch("window",(window)=> {
-            $scope.control.open = window
-            if (window) { access($scope.control.base+"/") }
-        });
+        $rootScope.$watch("WINDOW",(WINDOW)=> {
+            if(WINDOW !== 'undefined') {
+                $scope.control.open = WINDOW.open
+                $scope.control.preview = WINDOW.preview     
+                $scope.control.path = WINDOW.path
+                
+                if($scope.control.open){
+                    access($scope.control.base+"/") 
+                }
 
-        $rootScope.$watch("path",(path)=> {
-            $scope.control.path = path
+            }
         });
-
 
         $scope.open = ()=> {
             $scope.toggleWindow() 
@@ -44,7 +53,7 @@
 
         $scope.loadFile = ()=> {
             $scope.toggleWindow()
-            $rootScope.path = $scope.control.path 
+            $rootScope.WINDOW.path = $scope.control.path 
         }
 
         $scope.selectDirectory = (directory)=> {
@@ -67,7 +76,7 @@
 
         $scope.toggleWindow = ()=> {
             $scope.control.open = !$scope.control.open
-            $rootScope.window = !$rootScope.window
+            $rootScope.WINDOW.open = !$rootScope.WINDOW.open
         }
 
         $scope.toggle = ($event)=> {

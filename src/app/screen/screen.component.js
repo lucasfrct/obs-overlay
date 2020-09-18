@@ -24,25 +24,28 @@
 
         $rootScope.$watch("SCREEN", (SCREEN)=> {
 
-            console.log("SCREEN (EMNIRONMENT): ", SCREEN)
+            if(typeof SCREEN !== 'undefined') {
 
-            if(typeof SCREEN.lower != "undefined" && SCREEN.lower.elements) {
-                $scope.lower = SCREEN.lower
-            }
-
-            if(typeof SCREEN.preview != "undefined" && SCREEN.preview) {
-                $scope.control.preview = SCREEN.preview
+                console.log("SCREEN (EMNIRONMENT): ", SCREEN)
+                
+                if(typeof SCREEN.lower != "undefined" && SCREEN.lower.elements) {
+                    $scope.lower = SCREEN.lower
+                }
+                
+                if(typeof SCREEN.preview != "undefined" && SCREEN.preview) {
+                    $scope.control.preview = SCREEN.preview
+                }
             }
 
         }, true)
 
         $rootScope.$watch("PICKER", (PICKER)=> {
 
-            console.log("PICKER (ENVIRONMENT): ", PICKER)
-            
             if (typeof PICKER !== "undefined" && PICKER.color) {
+                console.log("PICKER (ENVIRONMENT): ", PICKER)
+                
                 $scope.control.element.color = PICKER.color
-                $rootScope.PANEL.update(unfocused($scope.lower))
+                $rootScope.PANEL.update(unfocused(angular.copy($scope.lower)))
             }
 
         }, true)
@@ -50,6 +53,7 @@
         $scope.control = {
             preview: false,
             element: angular.copy(element),
+            focused: false,
         }
         
         $scope.lower = {            
@@ -69,18 +73,31 @@
             }
         }
 
-        $scope.focused = (element)=> {
+        $scope.focusedIn = (element)=> {
 
-            var state = element.focused
+            console.log("focused: ", element.focused)
 
-            $scope.lower.elements.forEach((el)=> {
+            if(!element.focused) {
+                element.focused = true
+            }
+
+            /*
+
+            console.log("focused -- -- ", element)
+
+
+            var state = angular.copy(element.focused)
+
+            *$scope.lower.elements.forEach((el)=> {
                 el.focused = false
             })
             
-            element.focused = !state
-            $scope.control.element = element
+            //element.focused = !state
+            //$scope.control.element = element
 
             $rootScope.PICKER.color = $scope.control.element.color
+            
+            */
         }
 
         $scope.update = (element)=> {

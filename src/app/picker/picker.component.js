@@ -49,17 +49,19 @@
         }
 
         $rootScope.$watch('PICKER', (PICKER)=> {
-            console.log("PICKER (ENVIRONMENT)", PICKER)
+            if(typeof PICKER !== 'undefined') {
+                console.log("PICKER (ENVIRONMENT)", PICKER)
+            }
         }, true)
 
         $scope.Pickr = null
 
         var load = $interval(()=> {
-            if (typeof Pickr !== 'undefined' && $rootScope.PICKER.swatches) {
+            if (typeof Pickr !== 'undefined') {
                 Factory(".color-picker", $rootScope.PICKER.color, $rootScope.PICKER.swatches)
                 $interval.cancel(load)
             }
-        }, 10)
+        }, 20)
 
 
         function Factory(element, color, swatches) {
