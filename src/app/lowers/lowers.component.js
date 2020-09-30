@@ -33,7 +33,9 @@
         }
 
         $scope.toggleNew = ()=> {
-            $scope.collection.control.open = !$scope.collection.control.open
+            if($scope.collection.control !== undefined) {
+                $scope.collection.control.open = !$scope.collection.control.open
+            }
         }
 
         $scope.removeElement = (lower, elem)=> {
@@ -101,6 +103,20 @@
             $scope.toggleNew()
             $scope.modeEdit  = true
             $scope.lower = lower
+        }
+
+        $scope.select = (lower)=> {
+            let status = !lower.active
+            unselect()
+            lower.active = status
+            $scope.lower = lower
+            $rootScope.PANEL.lower($scope.lower)
+        }
+
+        function unselect() {
+            $scope.collection.lowers.forEach((lower)=> {
+                lower.active = false
+            })
         }
 
         function Update(collection) {

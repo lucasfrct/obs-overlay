@@ -38,6 +38,8 @@ html .panel-container > * {
     padding: 0 0 0 4px;
     margin: 0;
     font-style: normal;
+    display: flex;
+    align-items: center;
 }
 
 .panel-container .panel-header .panel-collection {
@@ -120,6 +122,13 @@ html .panel-container > * {
 html body .active-btn {
     outline: solid 2px #F00 !important;
     animation: blink 1.3s linear infinite;
+}
+
+body .panel-container .panel-new-collection {   
+    justify-content: center;
+    min-height: auto;
+    height: auto;
+    font-size: 11px;
 }
 
 @keyframes blink{

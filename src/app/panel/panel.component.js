@@ -21,10 +21,11 @@
     
     function PanelController($rootScope, $scope, storage, broadcast) {
         
-        //broadcast.on()
+        broadcast.on()
 
         $rootScope.PANEL = {
             update: Update,
+            lower: Lower,
         }
 
         $rootScope.$watch("PANEL", (PANEL)=> {
@@ -34,11 +35,14 @@
         $scope.effectTypes = [ "slide", "fade", "spin"]
         $scope.update = Update
         $scope.collections = storage.load()
+        $scope.collection = CollectionLoad()
         
-        $scope.collection = CollectionLoad($scope.collections)
-        $scope.control = $scope.collection.control
+        $scope.newcollection = new Collection
+        $scope.modalCollection = false
+        $scope.modeEdit = false
+        $scope.title = ""
         
-        //broadcast.send("control", $scope.control)
+        broadcast.send("control", $scope.collection.control)
         //$rootScope.PREVIEW = true
         
         console.log("PANEL >>> COLLECTIONS:", $scope.collections)
@@ -55,7 +59,7 @@
                     $scope.collection.effect.speed -= incrementer
                 }
                 
-                Update()
+                Update($scope.collection)
             }
         }
 
@@ -77,71 +81,129 @@
                 
                 $scope.collection.effect.type = $scope.effectTypes[i]
                 
-                Update()
+                Update($scope.collection)
+            }
+        }
+        
+        $scope.new = ()=> {
+            $scope.toggleModalCollection()
+            console.log("NEW", $scope.modeEdit)
+            $scope.newcollection = new Collection
+            $scope.title = ""
+        }
+        
+        $scope.save = (title)=> {
+            $scope.toggleModalCollection()
+
+            if($scope.modeEdit) {
+                $scope.modeEdit = false
+                if(storage.remove($scope.collection)) {
+                    $scope.collection.title = title
+                    Update($scope.collection)
+                }
+            } else {
+                let collection = new Collection
+                collection.title = title
+                $scope.collection = collection
+                Update($scope.collection)
+            }
+            console.log("SAVE COLLECTION", $scope.collection)
+        }
+
+        $scope.cancel = (title)=> {
+            $scope.toggleModalCollection()
+            $scope.modeEdit = false
+            console.log("CANCEL COLLECTION->TITLE: ", title)
+        }
+
+        $scope.edit = (collection)=> {
+            $scope.toggleModalCollection()
+            $scope.modeEdit = true
+            $scope.title = collection.title
+        }
+
+        $scope.delete = (title)=> {
+            $scope.toggleModalCollection()
+            if($scope.modeEdit) {
+                $scope.modeEdit = false
+                if(storage.remove($scope.collection)) {
+                    $scope.collection = null
+                    Update()    
+                    console.log("DELETE")
+                }
             }
         }
 
-        $scope.new = ()=> {
-            console.log("NEW COLLECTION")
+        $scope.toggleModalCollection = ()=> {
+            $scope.modalCollection = !$scope.modalCollection
         }
 
         $scope.select = (lower)=> {
 
-            var active = !lower.active
-
-            unselect()
-            
-            lower.active = active
-
-            $scope.lower = lower
-
-            $rootScope.SCREEN.lower = $scope.lower
+            //$rootScope.SCREEN.lower = $scope.lower
             
             if(lower.active && $scope.control.go) {
                 //broadcast.send("lower", lower)
             }
 
             if(!lower.active && $scope.control.go){
-                broadcast.send("lower", null)
-                $rootScope.SCREEN.lower = null
-                $scope.updade(lower)
+                //broadcast.send("lower", null)
+                //$rootScope.SCREEN.lower = null
+                //$scope.updade(lower)
             }
-            
         }
 
         $scope.reset = ()=> {
-            let reset = confirm("TODAS AS LOWERS SERÃO DELETADAS. \n\nVocê deseja confirmar essa acão?")
+            let reset = confirm("All Lower Thirds will be deleted. \n\nDo you want to confim this action?")
             if (reset === true) {
                 storage.clear()
             }
         }
 
         $scope.toggleGo = ()=> {
-            $scope.collection.control.onAir = !$scope.collection.control.onAir
-            Update()
+            if ($scope.collection.control !== undefined) {
+                $scope.collection.control.onAir = !$scope.collection.control.onAir
+                Update($scope.collection)
+            }
         }
 
-        function CollectionLoad(collections) {
-            if(collections.length > 0) {
-                return collections[0]
+        function CollectionLoad(collection = null) {
+            if(null == collection && $scope.collections.length > 0) {
+                return $scope.collections[0]
             }
+            if (null !== collection && $scope.collections.length > 0) {
+                return $scope.collections.find((coll)=>{
+                    return (coll.title == collection.title)
+                })
+            } 
             return { }
         }
 
-        // Strores the current collection and loads all collections from the database
+        // Stores the current collection, sends it to Lower thids and loads all collections from the database
         function Update (collection = null) {
 
-            console.log("SELECT", $scope.collection)
-            
-            if(null === collection) {
-                storage.add($scope.collection)
-                $rootScope.LOWERS.send($scope.collection)
+            if(null !== collection) {
+                storage.add(collection)
+                $scope.collections = storage.load()
+                $scope.collection = CollectionLoad(collection) 
+            } else {
+                $scope.collections = storage.load()
+                if($scope.collection) {
+                    $scope.collection = CollectionLoad($scope.collection)  
+                } else {
+                    $scope.collection = CollectionLoad()
+                }
             }
-            
-            
-            $scope.collections = storage.load($scope.collections)
+                        
+            $rootScope.LOWERS.send($scope.collection)
+            broadcast.send("control", $scope.collection.control)
 
-            console.log("UPDATE COLLECTION AND LOAD ALL COLLECTIONS", $scope.collections)
+            console.log("UPDATE COLLECTION ", $scope.collection)
+            console.log("UPDATE AND LOAD ALL COLLECTIONS", $scope.collections)
+        }
+
+        function Lower(lower) {
+            console.log("PANEL LOWER", lower)
         }
     }
 

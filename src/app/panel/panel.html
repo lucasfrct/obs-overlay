@@ -10,7 +10,10 @@
 <div class="panel-container">
     <header class="panel-header color-header no-select" ng-cloak>
 
-        <em>Collection</em>
+        <em>
+            <span class="panel-new-collection btn success" ng-click="new()">Add</span>
+            <span class="panel-new-collection btn info" ng-click="edit(collection)">edit</span>
+        </em>
 
         <em>Speed</em>
         
@@ -54,9 +57,27 @@
         <!--<screen></screen> -->
         <lowers ng-init="update()"></lowers>
 
-        <section class="modal {{ (control.window) ? 'active' :'' }}" >
+        <section class="modal {{ (collection.control.window) ? 'active' :'' }}" >
             <div class="modal-content color-secondary">
                 <window></window>
+            </div>
+        </section>
+
+        <section class="modal {{(modalCollection) ? 'active' : ''}}" >
+            <div class="modal-content color-secondary panel-form">
+                <h4>{{ (modeEdit) ? 'Edit' : 'New'}} Collection</h4>
+                <form>
+                    <input placeholder="Collection Name" ng-model="title">
+                    <button class="btn success" ng-click="save(title)" >Save</button>
+                    <button class="btn warning" ng-click="cancel(title)">Cancel</button>
+                    <button 
+                        class="btn danger" 
+                        ng-click="delete(title)" 
+                        style="float: right;" 
+                        ng-show="modeEdit"
+                    >Delete</button>
+                </form>
+
             </div>
         </section>
 

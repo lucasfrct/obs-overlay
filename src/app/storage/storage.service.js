@@ -28,53 +28,65 @@
 
         that.collection = (param = null)=> {
             
+            // LOAD/READ ONLY ONE COLLECTION
             if(null !== param && typeof param == "string") {
-                // LOAD/READ ONLY ONE COLLECTION
-                return that.read(param)
+                return that.read({ title: param })
             }
 
+            // SAVE/INSERT COLLECTION
             if(null !== param && typeof param == "object") {
-                // SAVE/ INSERT COLLECTION
-                that.add(param)
+                return that.add(param)
             }
 
+            // LOAD/READ ALL COLLECTIONS
             if(null == param) {
-                // LOAD/READ ALL COLLECtIONS
-                that.load()
+                return that.load()
             }
 
         }
 
-        that.read = (collection)=> {
+        that.read = (collection = { title: ''})=> {
             return JSON.parse(window.localStorage.getItem(collection.title))
         }
 
-        that.add = (collection)=> {
+        that.add = (collection = null)=> {
             if(collection.title !== undefined) {
                 window.localStorage.setItem(collection.title, JSON.stringify(collection))
+                return true
             }
+            return false
         }
 
-        that.remove = (collection)=> {
-            window.localStorage.removeItem(collection.title)
+        that.remove = (collection = null)=> {
+            if(collection.title !== undefined) {
+                window.localStorage.removeItem(collection.title)
+                return true
+            }
+            return false
         }
 
         that.load = (collections = [])=> {
             var load = []
             var obj = Object.keys(localStorage).reduce((obj, title) => {
-                var lower = JSON.parse(localStorage.getItem(title))
+                let lower = JSON.parse(localStorage.getItem(title))
+                
+                if(lower.title == "") {
+                    that.remove(lower)
+                }
+
                 if(lower.title !== undefined) {
                     load.push(lower)
                 }
                 return lower
             }, [])
-            return (load.length > 0 ) ? load : collections
+            return (load.length > 0 ) ? load: collections
         }
 
         that.clear = ()=> {
             window.localStorage.clear()
             console.log("ERASE DATABSE")
             alert("Erase Database!!!")
+            return true
         }
     }
 
